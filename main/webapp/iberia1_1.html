@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Chollo Vuelos</title>
+<style>
+    body {
+        background-image: url('image/nuub.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        font-family: Arial, sans-serif;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    form {
+        background-color: #faeded;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 350px;
+        text-align: center;
+        margin: auto;
+    }
+
+    h2 {
+        font-size: 24px;
+        color: #444;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"], input[type="password"] {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    input[type="submit"] {
+        width: 45%;
+        padding: 10px;
+        margin: 10px 5px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:first-child {
+        background-color: #1e90ff;
+        color: #fff;
+    }
+
+    input[type="submit"]:last-child {
+        background-color: #4caf50;
+        color: #fff;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .decoracion {
+        font-size: 18px;
+        color: #888;
+        margin: 20px 0;
+    }
+</style>
+</head>
+<body>
+    <form action="LoginServlet" method="POST">
+        <h2>Ingresa Usuario</h2>
+        <input type="text" name="correo" placeholder="Usuario" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        
+        <div class="decoracion">≪≪≪≪≪ °❀° ≫≫≫≫≫</div>
+        
+        <input type="submit" value="Siguiente">
+        <input type="submit" value="Registrar" onclick="location.href='registro.jsp'; return false;">
+    </form>
+</body>
+</html>

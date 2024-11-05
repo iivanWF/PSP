@@ -1,0 +1,160 @@
+@charset "UTF-8";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.titulo {
+    color: #fff;
+    margin: 0;
+}
+
+#cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #4996fc;
+    padding: 10px 20px;
+    font-style: italic;
+}
+
+#menu {
+    display: flex;
+    gap: 25px; 
+}
+
+#menu a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#menu a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+    color: #ffffff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    text-align: center;
+    padding: 2em;
+    background-color: #4996fc;
+    color: #fff;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.3em;
+}
+
+header p {
+    font-size: 1.1em;
+}
+
+.entr{
+	text-align: center;
+}
+
+.faq, .support, .tips {
+    max-width: 800px;
+    margin: 1.5em auto;
+    padding: 2em;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.faq h2, .support h2, .tips h2 {
+    font-size: 1.8em;
+    color: #4996fc;
+    border-bottom: 2px solid #4996fc;
+    padding-bottom: 0.3em;
+    margin-bottom: 1em;
+}
+
+.question {
+    margin-bottom: 1.5em;
+}
+
+.question h3 {
+    font-size: 1.3em;
+    color: #333;
+    margin-bottom: 0.5em;
+    cursor: pointer;
+    position: relative;
+}
+
+.question h3::after {
+    content: "▼";
+    font-size: 0.8em;
+    margin-left: 5px;
+    transition: transform 0.3s;
+}
+
+.question p {
+    font-size: 1em;
+    line-height: 1.5;
+    margin-top: 0.5em;
+    padding-left: 1em;
+    display: none; 
+}
+
+.question.open h3::after {
+    transform: rotate(180deg);
+}
+
+.question.open p {
+    display: block; 
+}
+
+.support ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 1em;
+}
+
+.support li {
+    margin: 0.5em 0;
+    font-size: 1em;
+}
+
+.support a {
+    color: #4996fc;
+    text-decoration: none;
+}
+
+.support a:hover {
+    text-decoration: underline;
+}
+
+.tips ul {
+    padding-left: 20px;
+    margin-top: 1em;
+}
+
+.tips li {
+    margin-bottom: 0.5em;
+    font-size: 1em;
+}
+
+footer {
+    text-align: center;
+    padding: 1em 0;
+    background-color: #333;
+    color: #fff;
+    font-size: 0.9em;
+    margin-top: 2em;
+}
