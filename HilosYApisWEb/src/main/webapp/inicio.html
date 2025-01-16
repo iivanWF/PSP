@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipios Españoles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #fbb282;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+        }
+
+        .panel {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #left-panel {
+            background-color: #F4F4F4;
+            border-right: 1px solid #DDD;
+        }
+
+        #right-panel {
+            background-color: #FFF;
+        }
+
+        .search-bar {
+            margin: 10px 20px;
+            display: flex;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #CCC;
+            border-radius: 4px;
+        }
+
+        .search-bar button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #005BB5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Municipios de España</h1>
+    </header>
+
+    <div class="search-bar" style="position: relative;">
+   		<input type="text" id="search" placeholder="Buscar municipio..." autocomplete="off" oninput="fetchAutocomplete()">
+    	<ul id="suggestions" style="list-style-type: none; margin: 0; padding: 0; position: absolute; background: white; border: 1px solid #ddd; width: 100%; z-index: 1000; top: 100%; left: 0; display: none;"></ul>
+    	<button onclick="searchMunicipio()">Buscar</button>
+	</div>
+
+    <div class="container">
+        <div id="left-panel" class="panel">
+            <h2>Información Meteorológica</h2>
+            <div id="weather-info">
+                <p>Introduce un municipio para ver información.</p>
+            </div>
+        </div>
+
+        <div id="right-panel" class="panel">
+            <h2>Datos Curiosos</h2>
+            <div id="curious-data">
+                <p>Introduce un municipio para ver datos curiosos.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    async function searchMunicipio() {
+        const searchValue = document.getElementById('search').value;
+        if (!searchValue) {
+            alert('Por favor, introduce un municipio.');
+            return;
+        }
+
+        try {
+            const [weatherResponse, curiousResponse] = await Promise.all([
+                fetch(`/HilosYApisWEb/weather?municipio=${encodeURIComponent(searchValue)}`),
+                fetch(`/HilosYApisWEb/curious?municipio=${encodeURIComponent(searchValue)}`)
+            ]);
+
+            if (!weatherResponse.ok || !curiousResponse.ok) {
+                throw new Error('Error en las respuestas de los servlets.');
+            }
+
+            const weatherData = await weatherResponse.json();
+            const curiousData = await curiousResponse.json();
+
+            // Información meteorológica
+            const temperatura = weatherData.main?.temp || 'No disponible';
+            const descripcion = weatherData.weather?.[0]?.description || 'No disponible';
+
+            document.getElementById('weather-info').innerHTML = `
+                <p><strong>Temperatura:</strong> ${temperatura}°C</p>
+                <p><strong>Descripción:</strong> ${descripcion}</p>
+            `;
+
+            // Datos curiosos: Extraer el texto del HTML del "extract"
+            const rawCuriousText = curiousData.query?.pages
+                ? Object.values(curiousData.query.pages)[0]?.extract || 'No disponible'
+                : 'No disponible';
+
+            // Crear un contenedor temporal para limpiar el HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = rawCuriousText;
+            const cleanCuriousText = tempDiv.textContent || tempDiv.innerText || 'No disponible';
+
+            document.getElementById('curious-data').innerHTML = `
+                <p>${cleanCuriousText}</p>
+            `;
+        } catch (error) {
+            console.error('Error al buscar el municipio:', error);
+            alert('Hubo un error al buscar los datos. Por favor, inténtalo de nuevo.');
+        }
+    }
+    
+    async function fetchAutocomplete() {
+        const searchValue = document.getElementById('search').value;
+
+        if (searchValue.length < 2) { // Espera al menos 2 caracteres para buscar
+            document.getElementById('suggestions').innerHTML = '';
+            document.getElementById('suggestions').style.display = 'none';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8081/HilosYApisWEb/autocomplete?input=${encodeURIComponent(searchValue)}`);
+            if (!response.ok) {
+                throw new Error('Error al obtener las sugerencias');
+            }
+
+            const suggestions = await response.json();
+            const suggestionsList = document.getElementById('suggestions');
+            suggestionsList.innerHTML = ''; // Limpia las sugerencias anteriores
+            suggestionsList.style.display = 'block'; // Muestra la lista de sugerencias
+
+            suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion; // Mostramos solo el nombre de la provincia
+                li.style.padding = '5px';
+                li.style.cursor = 'pointer';
+
+                li.onclick = () => {
+                    document.getElementById('search').value = suggestion;
+                    suggestionsList.innerHTML = ''; // Limpia las sugerencias
+                    suggestionsList.style.display = 'none'; // Oculta las sugerencias
+                };
+
+                suggestionsList.appendChild(li);
+            });
+
+            if (suggestions.length === 0) {
+                suggestionsList.style.display = 'none'; // Si no hay sugerencias, oculta la lista
+            }
+        } catch (error) {
+            console.error('Error en el autocompletado:', error);
+        }
+    }
+
+    // Oculta las sugerencias al hacer clic fuera
+    document.addEventListener('click', (event) => {
+        const searchBar = document.querySelector('.search-bar');
+        if (!searchBar.contains(event.target)) {
+            document.getElementById('suggestions').style.display = 'none';
+        }
+    });
+
+  </script>
+    
+</body>
+</html>
